@@ -7,7 +7,7 @@ module.exports = {
   entry: `${__dirname}/src/index.jsx`,
   mode: process.env.NODE_ENV,
   output: {
-    path: `${__dirname}/dist`,
+    path: `${__dirname}/public`,
     filename: 'bundle.js',
   },
   devtool: 'source-map',
