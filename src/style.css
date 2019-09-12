@@ -1,0 +1,30 @@
+.container {
+  background-color: white;
+  padding: 0;
+  color: #848484;
+}
+
+h2 {
+  font-size: 1.2rem;
+  padding: 0.25rem 0;
+}
+
+h3 {
+  font-size: 1rem;
+  padding: 0.25rem 0;
+}
+
+.DatoCMS-button svg {
+  fill: #ed6b5e;
+  margin-right: .5em;
+}
+
+ul li ul li ul li {
+  padding: 5px;
+  cursor: move;
+  border: solid 1px white;
+}
+
+ul li ul li ul li:hover {
+  border: solid 1px #ddd;
+}
