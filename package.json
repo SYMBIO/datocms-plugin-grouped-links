@@ -45,7 +45,7 @@
           "id": "developmentMode",
           "label": "Development mode",
           "type": "boolean",
-          "required": true,
+          "required": false,
           "default": false,
           "hint": "Shows debug messages in console"
         },
@@ -54,16 +54,7 @@
           "label": "DatoCMS API Token",
           "type": "string",
           "required": true,
-          "hint": "The DatoCMS API read-only token to use to query inverse relationships, <a href=\"/admin/access_tokens\">get it here</a>"
-        }
-      ],
-      "instance": [
-        {
-          "id": "groupField",
-          "label": "Field to group by",
-          "type": "string",
-          "required": true,
-          "hint": "Insert api name of the field used for grouping"
+          "hint": "The DatoCMS API full-access token, <a href=\"/admin/access_tokens\">get it here</a>"
         }
       ]
     }

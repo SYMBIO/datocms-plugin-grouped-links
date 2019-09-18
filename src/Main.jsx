@@ -104,9 +104,6 @@ export default class Main extends Component {
 
               const datoClient = new SiteClient(token);
               datoClient.items.destroy(prodRole.id)
-                .then((item) => {
-                  console.log(item);
-                })
                 .catch((error) => {
                   console.log(error);
                 });
@@ -279,9 +276,6 @@ export default class Main extends Component {
       startAxis: 'y',
       lockAxis: 'y',
       listeners: {
-        start(event) {
-          console.log(event.type, event.target);
-        },
         move(event) {
           const draggableElement = event.target;
 
