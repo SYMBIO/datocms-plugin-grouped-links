@@ -109,8 +109,9 @@
   "dependencies": {
     "classname": "^0.0.0",
     "datocms-client": "^2.0.9",
+    "interactjs": "^1.4.0-rc.13",
+    "prop-types": "^15.6.2",
     "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "prop-types": "^15.6.2"
+    "react-dom": "^16.5.2"
   }
 }

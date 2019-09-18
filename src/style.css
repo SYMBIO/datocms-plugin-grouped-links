@@ -23,8 +23,38 @@ ul li ul li ul li {
   padding: 5px;
   cursor: move;
   border: solid 1px white;
+  background-color: white;
 }
 
 ul li ul li ul li:hover {
   border: solid 1px #ddd;
+}
+
+.draggable{
+  touch-action: none;
+  user-select: none;
+}
+
+.dropzone{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 2px;
+  border: 2px dotted white;
+  transition: 0.3s;
+}
+
+.drop-active{
+  border: 2px dotted #ed6b5e;
+}
+
+.can-drop{
+  background-color: #ed6b5e;
+  color: white;
+}
+
+.move-to-front{
+  z-index: 100;
 }
