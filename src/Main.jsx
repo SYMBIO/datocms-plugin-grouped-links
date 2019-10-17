@@ -329,7 +329,7 @@ export default class Main extends Component {
               <ul>
                 {title.roles.map(role => (
                   <li key={`title_${title.id}_role_${role.id}`}>
-                    <h3>{role.title}</h3>
+                    <h3>{role.name}</h3>
                     <ul>
                       {data.roles.map((prodRole) => {
                         if (prodRole.role.id === role.id) {
