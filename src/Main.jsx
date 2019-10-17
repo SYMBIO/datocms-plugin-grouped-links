@@ -13,6 +13,7 @@ import './style.css';
   createNewItem: plugin.createNewItem,
   editItem: plugin.editItem,
   fieldPath: plugin.fieldPath,
+  remoteItemsType: plugin.field.attributes.validators.items_item_type.item_types[0],
   setFieldValue: plugin.setFieldValue,
   getFieldValue: plugin.getFieldValue,
 }))
@@ -23,6 +24,7 @@ export default class Main extends Component {
     createNewItem: PropTypes.func,
     editItem: PropTypes.func,
     fieldPath: PropTypes.string,
+    remoteItemsType: PropTypes.string,
     setFieldValue: PropTypes.func,
     getFieldValue: PropTypes.func,
   };
@@ -140,7 +142,7 @@ export default class Main extends Component {
       title
       roles {
         id
-        title
+        name
       }
     }
     roles {
@@ -187,6 +189,7 @@ export default class Main extends Component {
             allProductionRoles(filter: {id: {eq: "${item.id}"}}) {
               id
               artist {
+                first_name
                 name
               }
             }
@@ -291,7 +294,7 @@ export default class Main extends Component {
   render() {
     const { data, loading } = this.state;
     const {
-      createNewItem, fieldPath, getFieldValue, setFieldValue,
+      createNewItem, fieldPath, getFieldValue, setFieldValue, remoteItemsType,
     } = this.props;
 
     if (loading) {
@@ -304,7 +307,7 @@ export default class Main extends Component {
           type="button"
           className="DatoCMS-button"
           onClick={() => {
-            createNewItem(137159).then((item) => {
+            createNewItem(remoteItemsType).then((item) => {
               if (item) {
                 const fieldValues = getFieldValue(fieldPath);
                 fieldValues.push(item.id);
@@ -317,7 +320,7 @@ export default class Main extends Component {
           <svg viewBox="0 0 448 512" width="1em" height="1em">
             <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
           </svg>
-          <span>Přidat nový</span>
+          <span>Přidat</span>
         </button>
         <ul>
           {data.titles.map(title => (
