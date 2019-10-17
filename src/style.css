@@ -20,7 +20,7 @@ h3 {
 }
 
 ul li ul li ul li {
-  padding: 5px;
+  padding: 0 5px;
   cursor: move;
   border: solid 1px white;
   background-color: white;
