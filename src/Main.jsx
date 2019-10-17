@@ -76,7 +76,7 @@ export default class Main extends Component {
       <div>
         <div className="dropzone" key={`dropzone_${index}`} id={`dropzone_${index}`} />
         <li className="draggable" key={`prodRole_${prodRole.id}`} id={`prodRole_${index}`}>
-          {prodRole.artist.name}
+          {prodRole.artist.firstName} {prodRole.artist.name}
           {renderDates()}
           {' '}
           <button
