@@ -39,130 +39,6 @@ export default class Main extends Component {
     this.updateData();
   }
 
-  getProductionRoleRow(prodRole) {
-    const {
-      editItem,
-      fieldPath,
-      getFieldValue,
-      setFieldValue,
-      token,
-    } = this.props;
-    const { data } = this.state;
-
-    const index = data.roles.map(e => e.id)
-      .indexOf(prodRole.id);
-
-    function renderDates() {
-      if (!prodRole.dateFrom && !prodRole.dateTo) {
-        return false;
-      }
-
-      const result = [' '];
-      if (prodRole.dateFrom || prodRole.dateTo) {
-        result.push('(');
-      }
-      if (prodRole.dateFrom) {
-        result.push('od: ');
-        result.push(prodRole.dateFrom);
-      }
-      if (prodRole.dateTo) {
-        if (prodRole.dateFrom) {
-          result.push(', ');
-        }
-        result.push('do: ');
-        result.push(prodRole.dateTo);
-      }
-      if (prodRole.dateFrom || prodRole.dateTo) {
-        result.push(')');
-      }
-      return result.join('');
-    }
-
-    return (
-      <div>
-        <div
-          className="dropzone"
-          key={`dropzone_${index}`}
-          id={`dropzone_${index}`}
-        />
-        <li
-          className="draggable"
-          key={`prodRole_${prodRole.id}`}
-          id={`prodRole_${index}`}
-        >
-          <i className="icon--hamburger" />
-          {' '}
-          {prodRole.artist.firstName}
-          {' '}
-          {prodRole.artist.name}
-          {renderDates()}
-          {' '}
-          <button
-            type="button"
-            className="DatoCMS-button DatoCMS-button--micro"
-            onClick={() => {
-              editItem(prodRole.id)
-                .then((item) => {
-                  if (item) {
-                    this.updateData();
-                  }
-                });
-            }}
-          >
-            <span>Upravit</span>
-          </button>
-          <button
-            type="button"
-            className="DatoCMS-button DatoCMS-button--micro"
-            onClick={() => {
-              const currentFieldValue = getFieldValue(fieldPath);
-              currentFieldValue.splice(
-                getFieldValue(fieldPath)
-                  .indexOf(prodRole.id),
-                1,
-              );
-
-              const indexInData = data.roles
-                .map(e => e.id)
-                .indexOf(prodRole.id);
-              data.roles.splice(indexInData, 1);
-
-              setFieldValue(fieldPath, currentFieldValue);
-
-              const datoClient = new SiteClient(token);
-              datoClient.items.destroy(prodRole.id)
-                .catch((error) => {
-                  console.log(error);
-                });
-            }}
-          >
-            <span>Odstranit</span>
-          </button>
-        </li>
-      </div>
-    );
-  }
-
-  getProductionRoleBlock(title, roles, role) {
-    const rolesRows = roles.map((prodRole) => {
-      if (prodRole.role.id === role.id) {
-        return this.getProductionRoleRow(prodRole);
-      }
-      return false;
-    }).filter(a => a);
-
-    if (rolesRows.length === 0) {
-      return <></>;
-    }
-
-    return (
-      <li key={`title_${title.id}_role_${role.id}`}>
-        <h3>{role.name}</h3>
-        <ul>{rolesRows}</ul>
-      </li>
-    );
-  }
-
   updateData(cache, item) {
     const { token, itemId } = this.props;
     const { data } = this.state;
@@ -348,6 +224,130 @@ export default class Main extends Component {
       });
   }
 
+  renderBlock(title, roles, role) {
+    const rolesRows = roles.map((prodRole) => {
+      if (prodRole.role.id === role.id) {
+        return this.renderRow(prodRole);
+      }
+      return false;
+    }).filter(a => a);
+
+    if (rolesRows.length === 0) {
+      return <></>;
+    }
+
+    return (
+      <li key={`title_${title.id}_role_${role.id}`}>
+        <h3>{role.name}</h3>
+        <ul>{rolesRows}</ul>
+      </li>
+    );
+  }
+
+  renderRow(prodRole) {
+    const {
+      editItem,
+      fieldPath,
+      getFieldValue,
+      setFieldValue,
+      token,
+    } = this.props;
+    const { data } = this.state;
+
+    const index = data.roles.map(e => e.id)
+      .indexOf(prodRole.id);
+
+    function renderDates() {
+      if (!prodRole.dateFrom && !prodRole.dateTo) {
+        return false;
+      }
+
+      const result = [' '];
+      if (prodRole.dateFrom || prodRole.dateTo) {
+        result.push('(');
+      }
+      if (prodRole.dateFrom) {
+        result.push('od: ');
+        result.push(prodRole.dateFrom);
+      }
+      if (prodRole.dateTo) {
+        if (prodRole.dateFrom) {
+          result.push(', ');
+        }
+        result.push('do: ');
+        result.push(prodRole.dateTo);
+      }
+      if (prodRole.dateFrom || prodRole.dateTo) {
+        result.push(')');
+      }
+      return result.join('');
+    }
+
+    return (
+      <div>
+        <div
+          className="dropzone"
+          key={`dropzone_${index}`}
+          id={`dropzone_${index}`}
+        />
+        <li
+          className="draggable"
+          key={`prodRole_${prodRole.id}`}
+          id={`prodRole_${index}`}
+        >
+          <i className="icon--hamburger" />
+          {' '}
+          {prodRole.artist.firstName}
+          {' '}
+          {prodRole.artist.name}
+          {renderDates()}
+          {' '}
+          <button
+            type="button"
+            className="DatoCMS-button DatoCMS-button--micro"
+            onClick={() => {
+              editItem(prodRole.id)
+                .then((item) => {
+                  if (item) {
+                    this.updateData();
+                  }
+                });
+            }}
+          >
+            <span>Upravit</span>
+          </button>
+          <button
+            type="button"
+            className="DatoCMS-button DatoCMS-button--micro"
+            onClick={() => {
+              const currentFieldValue = getFieldValue(fieldPath);
+              currentFieldValue.splice(
+                getFieldValue(fieldPath)
+                  .indexOf(prodRole.id),
+                1,
+              );
+
+              const indexInData = data.roles
+                .map(e => e.id)
+                .indexOf(prodRole.id);
+              data.roles.splice(indexInData, 1);
+
+              setFieldValue(fieldPath, currentFieldValue);
+
+              const datoClient = new SiteClient(token);
+              datoClient.items.destroy(prodRole.id)
+                .catch((error) => {
+                  console.log(error);
+                });
+            }}
+          >
+            <span>Odstranit</span>
+          </button>
+        </li>
+      </div>
+    );
+  }
+
   render() {
     const { data, loading } = this.state;
     const {
@@ -397,7 +397,7 @@ export default class Main extends Component {
                 {title.title}
               </h2>
               <ul>
-                {title.roles.map(role => this.getProductionRoleBlock(title, data.roles, role))}
+                {title.roles.map(role => this.renderBlock(title, data.roles, role))}
               </ul>
             </li>
           ))}
