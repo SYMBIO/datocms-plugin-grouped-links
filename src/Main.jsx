@@ -71,12 +71,15 @@ export default class Main extends Component {
                 title
                 ${fieldName} {
                   id
-                  name
+                  field {
+                    id
+                    title
+                  }
                 }
               }
               ${fieldName} {
                 id
-                role {
+                staff {
                   id
                 }
                 artist {
@@ -116,7 +119,7 @@ export default class Main extends Component {
         },
         body: JSON.stringify({
           query: `{
-            allProductionRoles(filter: {id: {eq: "${item.id}"}}) {
+            allProductionStaffs(filter: {id: {eq: "${item.id}"}}) {
               id
               artist {
                 first_name
@@ -131,19 +134,19 @@ export default class Main extends Component {
         .then((res) => {
           const newRecord = {
             id: item.id,
-            role: {
-              id: item.attributes.role,
+            staff: {
+              id: item.attributes.staff,
             },
             artist: {
               id: item.attributes.artist,
-              name: res.data.allProductionRoles[0].artist.name,
+              name: res.data.allProductionStaffs[0].artist.name,
             },
             dateFrom: item.attributes.date_from,
             dateTo: item.attributes.date_to,
           };
 
           const originalData = data;
-          originalData.roles.push(newRecord);
+          originalData[fieldName].push(newRecord);
 
           this.setState({
             loading: false,
@@ -161,7 +164,7 @@ export default class Main extends Component {
       x: 0,
       y: 0,
     };
-    const { getFieldValue, setFieldValue, fieldPath } = this.props;
+    const { getFieldValue, setFieldValue, fieldPath, fieldName } = this.props;
     const { data } = this.state;
 
     interact('.dropzone')
@@ -191,12 +194,12 @@ export default class Main extends Component {
           );
           currentFieldValue.splice(draggableArrayIndex, 1, removedValue[0]);
 
-          const removedLi = data.roles.splice(
+          const removedLi = data[fieldName].splice(
             dropzoneArrayIndex,
             1,
-            data.roles[draggableArrayIndex],
+            data[fieldName][draggableArrayIndex],
           );
-          data.roles.splice(draggableArrayIndex, 1, removedLi[0]);
+          data[fieldName].splice(draggableArrayIndex, 1, removedLi[0]);
 
           event.relatedTarget.classList.toggle('can-drop');
           setFieldValue(fieldPath, currentFieldValue);
@@ -232,60 +235,61 @@ export default class Main extends Component {
       });
   }
 
-  renderBlock(title, roles, role) {
-    const rolesRows = roles.map((prodRole) => {
-      if (prodRole.role.id === role.id) {
-        return this.renderRow(prodRole);
+  renderBlock(title, items, item) {
+    const rows = items.map((i) => {
+      if (i.staff.id === item.id) {
+        return this.renderRow(i);
       }
       return false;
     }).filter(a => a);
 
-    if (rolesRows.length === 0) {
+    if (rows.length === 0) {
       return <></>;
     }
 
     return (
-      <li key={`title_${title.id}_role_${role.id}`}>
-        <h3>{role.name}</h3>
-        <ul>{rolesRows}</ul>
+      <li key={`title_${title.id}_item_${item.id}`}>
+        <h3>{item.field.title}</h3>
+        <ul>{rows}</ul>
       </li>
     );
   }
 
-  renderRow(prodRole) {
+  renderRow(item) {
     const {
       editItem,
       fieldPath,
+      fieldName,
       getFieldValue,
       setFieldValue,
       token,
     } = this.props;
     const { data } = this.state;
 
-    const index = data.roles.map(e => e.id)
-      .indexOf(prodRole.id);
+    const index = data[fieldName].map(e => e.id)
+      .indexOf(item.id);
 
     function renderDates() {
-      if (!prodRole.dateFrom && !prodRole.dateTo) {
+      if (!item.dateFrom && !item.dateTo) {
         return false;
       }
 
       const result = [' '];
-      if (prodRole.dateFrom || prodRole.dateTo) {
+      if (item.dateFrom || item.dateTo) {
         result.push('(');
       }
-      if (prodRole.dateFrom) {
+      if (item.dateFrom) {
         result.push('od: ');
-        result.push(prodRole.dateFrom);
+        result.push(item.dateFrom);
       }
-      if (prodRole.dateTo) {
-        if (prodRole.dateFrom) {
+      if (item.dateTo) {
+        if (item.dateFrom) {
           result.push(', ');
         }
         result.push('do: ');
-        result.push(prodRole.dateTo);
+        result.push(item.dateTo);
       }
-      if (prodRole.dateFrom || prodRole.dateTo) {
+      if (item.dateFrom || item.dateTo) {
         result.push(')');
       }
       return result.join('');
@@ -300,21 +304,21 @@ export default class Main extends Component {
         />
         <li
           className="draggable"
-          key={`prodRole_${prodRole.id}`}
-          id={`prodRole_${index}`}
+          key={`item_${item.id}`}
+          id={`item_${index}`}
         >
           <i className="icon--hamburger" />
           {' '}
-          {prodRole.artist.firstName}
+          {item.artist.firstName}
           {' '}
-          {prodRole.artist.name}
+          {item.artist.name}
           {renderDates()}
           {' '}
           <button
             type="button"
             className="DatoCMS-button DatoCMS-button--micro"
             onClick={() => {
-              editItem(prodRole.id)
+              editItem(item.id)
                 .then((item) => {
                   if (item) {
                     this.updateData();
@@ -331,19 +335,19 @@ export default class Main extends Component {
               const currentFieldValue = getFieldValue(fieldPath);
               currentFieldValue.splice(
                 getFieldValue(fieldPath)
-                  .indexOf(prodRole.id),
+                  .indexOf(item.id),
                 1,
               );
 
-              const indexInData = data.roles
+              const indexInData = data[fieldName]
                 .map(e => e.id)
-                .indexOf(prodRole.id);
-              data.roles.splice(indexInData, 1);
+                .indexOf(item.id);
+              data[fieldName].splice(indexInData, 1);
 
               setFieldValue(fieldPath, currentFieldValue);
 
               const datoClient = new SiteClient(token);
-              datoClient.items.destroy(prodRole.id)
+              datoClient.items.destroy(item.id)
                 .catch((error) => {
                   console.log(error);
                 });
@@ -361,6 +365,7 @@ export default class Main extends Component {
     const {
       createNewItem,
       fieldPath,
+      fieldName,
       getFieldValue,
       setFieldValue,
       remoteItemsType,
@@ -405,7 +410,7 @@ export default class Main extends Component {
                 {title.title}
               </h2>
               <ul>
-                {title.roles.map(role => this.renderBlock(title, data.roles, role))}
+                {title[fieldName].map(item => this.renderBlock(title, data[fieldName], item))}
               </ul>
             </li>
           ))}
