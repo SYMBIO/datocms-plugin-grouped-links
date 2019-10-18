@@ -90,6 +90,8 @@ export default class Main extends Component {
           key={`prodRole_${prodRole.id}`}
           id={`prodRole_${index}`}
         >
+          <i className="icon--hamburger" />
+          {' '}
           {prodRole.artist.firstName}
           {' '}
           {prodRole.artist.name}
