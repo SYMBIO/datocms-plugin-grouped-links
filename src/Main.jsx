@@ -143,6 +143,26 @@ export default class Main extends Component {
     );
   }
 
+  getProductionRoleBlock(title, roles, role) {
+    const rolesRows = roles.map((prodRole) => {
+      if (prodRole.role.id === role.id) {
+        return this.getProductionRoleRow(prodRole);
+      }
+      return false;
+    }).filter(a => a);
+
+    if (rolesRows.length === 0) {
+      return <></>;
+    }
+
+    return (
+      <li key={`title_${title.id}_role_${role.id}`}>
+        <h3>{role.name}</h3>
+        <ul>{rolesRows}</ul>
+      </li>
+    );
+  }
+
   updateData(cache, item) {
     const { token, itemId } = this.props;
     const { data } = this.state;
@@ -369,21 +389,13 @@ export default class Main extends Component {
         <ul>
           {data.titles.map(title => (
             <li key={`title_${title.id}`}>
-              <h2>Titul: {title.title}</h2>
+              <h2>
+                Titul:
+                {' '}
+                {title.title}
+              </h2>
               <ul>
-                {title.roles.map(role => (
-                  <li key={`title_${title.id}_role_${role.id}`}>
-                    <h3>{role.name}</h3>
-                    <ul>
-                      {data.roles.map((prodRole) => {
-                        if (prodRole.role.id === role.id) {
-                          return this.getProductionRoleRow(prodRole);
-                        }
-                        return false;
-                      })}
-                    </ul>
-                  </li>
-                ))}
+                {title.roles.map(role => this.getProductionRoleBlock(title, data.roles, role))}
               </ul>
             </li>
           ))}
