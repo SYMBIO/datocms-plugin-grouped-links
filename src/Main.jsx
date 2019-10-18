@@ -6,12 +6,18 @@ import interact from 'interactjs';
 import connectToDatoCms from './connectToDatoCms';
 import './style.css';
 
+const capitalize = function(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 @connectToDatoCms(plugin => ({
   developmentMode: plugin.parameters.global.developmentMode,
   token: plugin.parameters.global.datoCmsApiToken,
   itemId: plugin.itemId,
+  itemType: plugin.itemType.attributes.api_key,
   createNewItem: plugin.createNewItem,
   editItem: plugin.editItem,
+  fieldName: plugin.field.attributes.api_key,
   fieldPath: plugin.fieldPath,
   remoteItemsType:
     plugin.field.attributes.validators.items_item_type.item_types[0],
@@ -21,9 +27,11 @@ import './style.css';
 export default class Main extends Component {
   static propTypes = {
     itemId: PropTypes.string,
+    itemType: PropTypes.string,
     token: PropTypes.string,
     createNewItem: PropTypes.func,
     editItem: PropTypes.func,
+    fieldName: PropTypes.string,
     fieldPath: PropTypes.string,
     remoteItemsType: PropTypes.string,
     setFieldValue: PropTypes.func,
@@ -40,7 +48,7 @@ export default class Main extends Component {
   }
 
   updateData(cache, item) {
-    const { token, itemId } = this.props;
+    const { token, itemId, itemType, fieldName } = this.props;
     const { data } = this.state;
 
     this.setState({
@@ -57,30 +65,30 @@ export default class Main extends Component {
         },
         body: JSON.stringify({
           query: `{
-  production(filter: {id: {eq: "${itemId}"}}) {
-    titles {
-      id
-      title
-      roles {
-        id
-        name
-      }
-    }
-    roles {
-      id
-      role {
-        id
-      }
-      artist {
-        id
-        firstName
-        name
-      }
-      dateFrom
-      dateTo
-    }
-  }
-}`,
+            ${itemType}(filter: {id: {eq: "${itemId}"}}) {
+              titles {
+                id
+                title
+                ${fieldName} {
+                  id
+                  name
+                }
+              }
+              ${fieldName} {
+                id
+                role {
+                  id
+                }
+                artist {
+                  id
+                  firstName
+                  name
+                }
+                dateFrom
+                dateTo
+              }
+            }
+          }`,
         }),
       })
         .then(res => res.json())
