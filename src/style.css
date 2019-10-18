@@ -23,6 +23,10 @@ h3 {
   margin-right: .5em;
 }
 
+ul li ul li ul {
+  margin-bottom: 15px;
+}
+
 ul li ul li ul li {
   padding: 0 5px;
   cursor: move;
