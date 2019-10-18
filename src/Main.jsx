@@ -6,10 +6,6 @@ import interact from 'interactjs';
 import connectToDatoCms from './connectToDatoCms';
 import './style.css';
 
-const capitalize = function(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-};
-
 @connectToDatoCms(plugin => ({
   developmentMode: plugin.parameters.global.developmentMode,
   token: plugin.parameters.global.datoCmsApiToken,
@@ -48,7 +44,9 @@ export default class Main extends Component {
   }
 
   updateData(cache, item) {
-    const { token, itemId, itemType, fieldName } = this.props;
+    const {
+      token, itemId, itemType, fieldName,
+    } = this.props;
     const { data } = this.state;
 
     this.setState({
@@ -164,7 +162,9 @@ export default class Main extends Component {
       x: 0,
       y: 0,
     };
-    const { getFieldValue, setFieldValue, fieldPath, fieldName } = this.props;
+    const {
+      getFieldValue, setFieldValue, fieldPath, fieldName,
+    } = this.props;
     const { data } = this.state;
 
     interact('.dropzone')
@@ -319,8 +319,8 @@ export default class Main extends Component {
             className="DatoCMS-button DatoCMS-button--micro"
             onClick={() => {
               editItem(item.id)
-                .then((item) => {
-                  if (item) {
+                .then((item2) => {
+                  if (item2) {
                     this.updateData();
                   }
                 });
