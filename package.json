@@ -64,6 +64,27 @@
           "type": "string",
           "required": true,
           "hint": "Insert api name of the field used for grouping"
+        },
+        {
+          "id": "allItemsQuery",
+          "label": "Query name for all remote items",
+          "type": "string",
+          "required": true,
+          "hint": ""
+        },
+        {
+          "id": "queryPart",
+          "label": "Part of the graphql query to get display data",
+          "type": "string",
+          "required": true,
+          "hint": ""
+        },
+        {
+          "id": "attrName",
+          "label": "Attribute to show from data",
+          "type": "string",
+          "required": true,
+          "hint": ""
         }
       ]
     }

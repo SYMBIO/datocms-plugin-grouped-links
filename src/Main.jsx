@@ -9,6 +9,10 @@ import './style.css';
 @connectToDatoCms(plugin => ({
   developmentMode: plugin.parameters.global.developmentMode,
   token: plugin.parameters.global.datoCmsApiToken,
+  groupField: plugin.parameters.instance.groupField,
+  allItemsQuery: plugin.parameters.instance.allItemsQuery,
+  queryPart: plugin.parameters.instance.queryPart,
+  attrName: plugin.parameters.instance.attrName,
   itemId: plugin.itemId,
   itemType: plugin.itemType.attributes.api_key,
   createNewItem: plugin.createNewItem,
@@ -22,6 +26,10 @@ import './style.css';
 }))
 export default class Main extends Component {
   static propTypes = {
+    groupField: PropTypes.string,
+    allItemsQuery: PropTypes.string,
+    queryPart: PropTypes.string,
+    attrName: PropTypes.string,
     itemId: PropTypes.string,
     itemType: PropTypes.string,
     token: PropTypes.string,
@@ -45,7 +53,7 @@ export default class Main extends Component {
 
   updateData(cache, item) {
     const {
-      token, itemId, itemType, fieldName,
+      token, itemId, itemType, fieldName, groupField, allItemsQuery,
     } = this.props;
     const { data } = this.state;
 
@@ -77,7 +85,7 @@ export default class Main extends Component {
               }
               ${fieldName} {
                 id
-                staff {
+                ${groupField} {
                   id
                 }
                 artist {
@@ -117,7 +125,7 @@ export default class Main extends Component {
         },
         body: JSON.stringify({
           query: `{
-            allProductionStaffs(filter: {id: {eq: "${item.id}"}}) {
+            ${allItemsQuery}(filter: {id: {eq: "${item.id}"}}) {
               id
               artist {
                 first_name
@@ -132,12 +140,12 @@ export default class Main extends Component {
         .then((res) => {
           const newRecord = {
             id: item.id,
-            staff: {
-              id: item.attributes.staff,
+            [groupField]: {
+              id: item.attributes[groupField],
             },
             artist: {
               id: item.attributes.artist,
-              name: res.data.allProductionStaffs[0].artist.name,
+              name: res.data[allItemsQuery][0].artist.name,
             },
             dateFrom: item.attributes.date_from,
             dateTo: item.attributes.date_to,
@@ -237,7 +245,7 @@ export default class Main extends Component {
 
   renderBlock(title, items, item) {
     const rows = items.map((i) => {
-      if (i.staff.id === item.id) {
+      if (i[this.props.groupField].id === item.id) {
         return this.renderRow(i);
       }
       return false;
