@@ -369,7 +369,7 @@ export default class Main extends Component {
         <ul>
           {data.titles.map(title => (
             <li key={`title_${title.id}`}>
-              <h2>{title.title}</h2>
+              <h2>Titul: {title.title}</h2>
               <ul>
                 {title.roles.map(role => (
                   <li key={`title_${title.id}_role_${role.id}`}>

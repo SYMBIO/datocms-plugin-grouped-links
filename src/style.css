@@ -7,13 +7,15 @@
 h2 {
   font-size: 1.2rem;
   padding: 0.25rem 0;
+  color: #666;
+  font-weight: 500;
 }
 
 h3 {
   font-size: 1rem;
   padding: 0.25rem 0;
   font-weight: 500;
-  color: #000;
+  color: #666;
 }
 
 .DatoCMS-button svg {
