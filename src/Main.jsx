@@ -13,7 +13,8 @@ import './style.css';
   createNewItem: plugin.createNewItem,
   editItem: plugin.editItem,
   fieldPath: plugin.fieldPath,
-  remoteItemsType: plugin.field.attributes.validators.items_item_type.item_types[0],
+  remoteItemsType:
+    plugin.field.attributes.validators.items_item_type.item_types[0],
   setFieldValue: plugin.setFieldValue,
   getFieldValue: plugin.getFieldValue,
 }))
@@ -40,11 +41,16 @@ export default class Main extends Component {
 
   getProductionRoleRow(prodRole) {
     const {
-      editItem, fieldPath, getFieldValue, setFieldValue, token,
+      editItem,
+      fieldPath,
+      getFieldValue,
+      setFieldValue,
+      token,
     } = this.props;
     const { data } = this.state;
 
-    const index = data.roles.map(e => e.id).indexOf(prodRole.id);
+    const index = data.roles.map(e => e.id)
+      .indexOf(prodRole.id);
 
     function renderDates() {
       if (!prodRole.dateFrom && !prodRole.dateTo) {
@@ -74,20 +80,31 @@ export default class Main extends Component {
 
     return (
       <div>
-        <div className="dropzone" key={`dropzone_${index}`} id={`dropzone_${index}`} />
-        <li className="draggable" key={`prodRole_${prodRole.id}`} id={`prodRole_${index}`}>
-          {prodRole.artist.firstName} {prodRole.artist.name}
+        <div
+          className="dropzone"
+          key={`dropzone_${index}`}
+          id={`dropzone_${index}`}
+        />
+        <li
+          className="draggable"
+          key={`prodRole_${prodRole.id}`}
+          id={`prodRole_${index}`}
+        >
+          {prodRole.artist.firstName}
+          {' '}
+          {prodRole.artist.name}
           {renderDates()}
           {' '}
           <button
             type="button"
             className="DatoCMS-button DatoCMS-button--micro"
             onClick={() => {
-              editItem(prodRole.id).then((item) => {
-                if (item) {
-                  this.updateData();
-                }
-              });
+              editItem(prodRole.id)
+                .then((item) => {
+                  if (item) {
+                    this.updateData();
+                  }
+                });
             }}
           >
             <span>Upravit</span>
@@ -97,9 +114,15 @@ export default class Main extends Component {
             className="DatoCMS-button DatoCMS-button--micro"
             onClick={() => {
               const currentFieldValue = getFieldValue(fieldPath);
-              currentFieldValue.splice(getFieldValue(fieldPath).indexOf(prodRole.id), 1);
+              currentFieldValue.splice(
+                getFieldValue(fieldPath)
+                  .indexOf(prodRole.id),
+                1,
+              );
 
-              const indexInData = data.roles.map(e => e.id).indexOf(prodRole.id);
+              const indexInData = data.roles
+                .map(e => e.id)
+                .indexOf(prodRole.id);
               data.roles.splice(indexInData, 1);
 
               setFieldValue(fieldPath, currentFieldValue);
@@ -152,6 +175,7 @@ export default class Main extends Component {
       }
       artist {
         id
+        firstName
         name
       }
       dateFrom
@@ -227,74 +251,89 @@ export default class Main extends Component {
   }
 
   initilizeDragHandler() {
-    const position = { x: 0, y: 0 };
+    const position = {
+      x: 0,
+      y: 0,
+    };
     const { getFieldValue, setFieldValue, fieldPath } = this.props;
     const { data } = this.state;
 
-    interact('.dropzone').dropzone({
-      overlap: 0.05,
+    interact('.dropzone')
+      .dropzone({
+        overlap: 0.05,
 
-      ondropactivate(event) {
-        event.target.classList.toggle('drop-active');
-      },
-      ondragenter(event) {
-        event.relatedTarget.classList.toggle('can-drop');
-      },
-      ondragleave(event) {
-        event.relatedTarget.classList.toggle('can-drop');
-      },
-      ondrop(event) {
-        const currentFieldValue = getFieldValue(fieldPath);
-        const dropzoneArrayIndex = Number(event.target.id.split('_')[1]);
-        const draggableArrayIndex = Number(event.relatedTarget.id.split('_')[1]);
-
-        const removedValue = currentFieldValue.splice(
-          dropzoneArrayIndex,
-          1,
-          currentFieldValue[draggableArrayIndex],
-        );
-        currentFieldValue.splice(draggableArrayIndex, 1, removedValue[0]);
-
-        const removedLi = data.roles.splice(dropzoneArrayIndex, 1, data.roles[draggableArrayIndex]);
-        data.roles.splice(draggableArrayIndex, 1, removedLi[0]);
-
-        event.relatedTarget.classList.toggle('can-drop');
-        setFieldValue(fieldPath, currentFieldValue);
-      },
-      ondropdeactivate(event) {
-        const e = event;
-        e.target.classList.toggle('drop-active');
-        e.relatedTarget.style.transform = `translate(0px, -${position.y}px)`;
-        position.y = 0;
-      },
-    });
-
-    interact('.draggable').draggable({
-      modifiers: [
-        interact.modifiers.restrict({
-          restriction: 'ul li ul li ul',
-          endOnly: false,
-        }),
-      ],
-      startAxis: 'y',
-      lockAxis: 'y',
-      listeners: {
-        move(event) {
-          const draggableElement = event.target;
-
-          position.x += event.dx;
-          position.y += event.dy;
-
-          draggableElement.style.transform = `translate(${position.x}px, ${position.y}px)`;
+        ondropactivate(event) {
+          event.target.classList.toggle('drop-active');
         },
-      },
-    });
+        ondragenter(event) {
+          event.relatedTarget.classList.toggle('can-drop');
+        },
+        ondragleave(event) {
+          event.relatedTarget.classList.toggle('can-drop');
+        },
+        ondrop(event) {
+          const currentFieldValue = getFieldValue(fieldPath);
+          const dropzoneArrayIndex = Number(event.target.id.split('_')[1]);
+          const draggableArrayIndex = Number(
+            event.relatedTarget.id.split('_')[1],
+          );
+
+          const removedValue = currentFieldValue.splice(
+            dropzoneArrayIndex,
+            1,
+            currentFieldValue[draggableArrayIndex],
+          );
+          currentFieldValue.splice(draggableArrayIndex, 1, removedValue[0]);
+
+          const removedLi = data.roles.splice(
+            dropzoneArrayIndex,
+            1,
+            data.roles[draggableArrayIndex],
+          );
+          data.roles.splice(draggableArrayIndex, 1, removedLi[0]);
+
+          event.relatedTarget.classList.toggle('can-drop');
+          setFieldValue(fieldPath, currentFieldValue);
+        },
+        ondropdeactivate(event) {
+          const e = event;
+          e.target.classList.toggle('drop-active');
+          e.relatedTarget.style.transform = `translate(0px, -${position.y}px)`;
+          position.y = 0;
+        },
+      });
+
+    interact('.draggable')
+      .draggable({
+        modifiers: [
+          interact.modifiers.restrict({
+            restriction: 'ul li ul li ul',
+            endOnly: false,
+          }),
+        ],
+        startAxis: 'y',
+        lockAxis: 'y',
+        listeners: {
+          move(event) {
+            const draggableElement = event.target;
+
+            position.x += event.dx;
+            position.y += event.dy;
+
+            draggableElement.style.transform = `translate(${position.x}px, ${position.y}px)`;
+          },
+        },
+      });
   }
 
   render() {
     const { data, loading } = this.state;
     const {
-      createNewItem, fieldPath, getFieldValue, setFieldValue, remoteItemsType,
+      createNewItem,
+      fieldPath,
+      getFieldValue,
+      setFieldValue,
+      remoteItemsType,
     } = this.props;
 
     if (loading) {
@@ -307,18 +346,21 @@ export default class Main extends Component {
           type="button"
           className="DatoCMS-button"
           onClick={() => {
-            createNewItem(remoteItemsType).then((item) => {
-              if (item) {
-                const fieldValues = getFieldValue(fieldPath);
-                fieldValues.push(item.id);
-                setFieldValue(fieldPath, fieldValues);
-                this.updateData(true, item);
-              }
-            });
+            createNewItem(remoteItemsType)
+              .then((item) => {
+                if (item) {
+                  const fieldValues = getFieldValue(fieldPath);
+                  fieldValues.push(item.id);
+                  setFieldValue(fieldPath, fieldValues);
+                  this.updateData(true, item);
+                }
+              });
           }}
         >
           <svg viewBox="0 0 448 512" width="1em" height="1em">
-            <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
+            <path
+              d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+            />
           </svg>
           <span>Přidat</span>
         </button>
