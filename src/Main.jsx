@@ -364,28 +364,30 @@ export default class Main extends Component {
 
     return (
       <div className="container">
-        <button
-          type="button"
-          className="DatoCMS-button"
-          onClick={() => {
-            createNewItem(remoteItemsType)
-              .then((item) => {
-                if (item) {
-                  const fieldValues = getFieldValue(fieldPath);
-                  fieldValues.push(item.id);
-                  setFieldValue(fieldPath, fieldValues);
-                  this.updateData(true, item);
-                }
-              });
-          }}
-        >
-          <svg viewBox="0 0 448 512" width="1em" height="1em">
-            <path
-              d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
-            />
-          </svg>
-          <span>Přidat</span>
-        </button>
+        <div className="toolbar">
+          <button
+            type="button"
+            className="DatoCMS-button"
+            onClick={() => {
+              createNewItem(remoteItemsType)
+                .then((item) => {
+                  if (item) {
+                    const fieldValues = getFieldValue(fieldPath);
+                    fieldValues.push(item.id);
+                    setFieldValue(fieldPath, fieldValues);
+                    this.updateData(true, item);
+                  }
+                });
+            }}
+          >
+            <svg viewBox="0 0 448 512" width="1em" height="1em">
+              <path
+                d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+              />
+            </svg>
+            <span>Přidat</span>
+          </button>
+        </div>
         <ul>
           {data.titles.map(title => (
             <li key={`title_${title.id}`}>
