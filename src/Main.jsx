@@ -6,6 +6,15 @@ import interact from 'interactjs';
 import connectToDatoCms from './connectToDatoCms';
 import './style.css';
 
+function getObjectDeepProperty(obj, path) {
+  const parts = path.split('.');
+  let val = obj;
+  parts.forEach((p) => {
+    val = val[p];
+  });
+  return val;
+}
+
 @connectToDatoCms(plugin => ({
   developmentMode: plugin.parameters.global.developmentMode,
   token: plugin.parameters.global.datoCmsApiToken,
@@ -53,7 +62,7 @@ export default class Main extends Component {
 
   updateData(cache, item) {
     const {
-      token, itemId, itemType, fieldName, groupField, allItemsQuery,
+      token, itemId, itemType, fieldName, groupField, allItemsQuery, queryPart,
     } = this.props;
     const { data } = this.state;
 
@@ -77,10 +86,7 @@ export default class Main extends Component {
                 title
                 ${fieldName} {
                   id
-                  field {
-                    id
-                    title
-                  }
+                  ${queryPart}
                 }
               }
               ${fieldName} {
@@ -244,8 +250,10 @@ export default class Main extends Component {
   }
 
   renderBlock(title, items, item) {
+    const { groupField, attrName } = this.props;
+
     const rows = items.map((i) => {
-      if (i[this.props.groupField].id === item.id) {
+      if (i[groupField].id === item.id) {
         return this.renderRow(i);
       }
       return false;
@@ -257,7 +265,7 @@ export default class Main extends Component {
 
     return (
       <li key={`title_${title.id}_item_${item.id}`}>
-        <h3>{item.field.title}</h3>
+        <h3>{getObjectDeepProperty(item, attrName)}</h3>
         <ul>{rows}</ul>
       </li>
     );
