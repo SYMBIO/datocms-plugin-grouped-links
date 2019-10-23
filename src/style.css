@@ -37,7 +37,7 @@ ul li ul li ul {
 }
 
 ul li ul li ul li {
-  padding: 0 5px;
+  padding: 0 10px;
   cursor: move;
   border: solid 1px white;
   background-color: white;
