@@ -14,7 +14,7 @@ module.exports = {
   devServer: {
     contentBase: './',
     disableHostCheck: true,
-    public: 'https://datocms-plugin-grouped-links.localtunnel.me',
+    public: 'https://datocms-plugin-grouped-links.tunnel.datahub.at',
   },
   module: {
     rules: [

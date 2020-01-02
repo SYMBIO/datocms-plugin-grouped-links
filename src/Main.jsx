@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { SiteClient } from 'datocms-client';
 import interact from 'interactjs';
+import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
 
 import connectToDatoCms from './connectToDatoCms';
 import './style.css';
@@ -42,7 +44,7 @@ export default class Main extends Component {
     itemId: PropTypes.string,
     itemType: PropTypes.string,
     token: PropTypes.string,
-    createNewItem: PropTypes.func,
+    // createNewItem: PropTypes.func,
     editItem: PropTypes.func,
     fieldName: PropTypes.string,
     fieldPath: PropTypes.string,
@@ -54,6 +56,11 @@ export default class Main extends Component {
   state = {
     loading: true,
     data: {},
+    role: null,
+    staff: null,
+    artist: null,
+    from: null,
+    to: null,
   };
 
   componentDidMount() {
@@ -77,31 +84,6 @@ export default class Main extends Component {
     });
 
     if (!cache) {
-      console.log(`{
-            ${itemType}(filter: {id: {eq: "${itemId}"}}) {
-              titles {
-                id
-                title
-                ${fieldName} {
-                  id
-                  ${queryPart}
-                }
-              }
-              ${fieldName} {
-                id
-                ${groupField} {
-                  id
-                }
-                artist {
-                  id
-                  firstName
-                  name
-                }
-                dateFrom
-                dateTo
-              }
-            }
-          }`);
       fetch('https://graphql.datocms.com/preview', {
         method: 'POST',
         headers: {
@@ -139,7 +121,6 @@ export default class Main extends Component {
       })
         .then(res => res.json())
         .then((res) => {
-          console.log(res);
           this.setState({
             loading: false,
             data: res.data[itemType],
@@ -154,16 +135,6 @@ export default class Main extends Component {
           console.log(error);
         });
     } else {
-      console.log(`{
-            ${allItemsQuery}(filter: {id: {eq: "${item.id}"}}) {
-              id
-              artist {
-                firstName
-                name
-              }
-            }
-          }
-          `);
       fetch('https://graphql.datocms.com/preview', {
         method: 'POST',
         headers: {
@@ -186,17 +157,18 @@ export default class Main extends Component {
       })
         .then(res => res.json())
         .then((res) => {
+          const { artist } = res.data[allItemsQuery][0];
           const newRecord = {
             id: item.id,
             [groupField]: {
-              id: item.attributes[groupField],
+              id: item[groupField],
             },
             artist: {
-              id: item.attributes.artist,
-              name: res.data[allItemsQuery][0].artist.name,
+              id: item.artist,
+              name: artist.firstName ? `${artist.firstName} ${artist.name}` : artist.name,
             },
-            dateFrom: item.attributes.date_from,
-            dateTo: item.attributes.date_to,
+            dateFrom: item.dateFrom,
+            dateTo: item.dateTo,
           };
 
           const originalData = data;
@@ -353,7 +325,7 @@ export default class Main extends Component {
     }
 
     return (
-      <div>
+      <div key={`Row_${item.id}`}>
         <div
           className="dropzone"
           key={`dropzone_${index}`}
@@ -411,13 +383,17 @@ export default class Main extends Component {
   }
 
   render() {
-    const { data, loading } = this.state;
     const {
-      createNewItem,
+      data, loading, role, staff, artist, from, to,
+    } = this.state;
+    const {
       fieldPath,
       fieldName,
       getFieldValue,
       setFieldValue,
+      token,
+      groupField,
+      itemId,
       remoteItemsType,
     } = this.props;
 
@@ -432,14 +408,31 @@ export default class Main extends Component {
             type="button"
             className="DatoCMS-button"
             onClick={() => {
-              createNewItem(remoteItemsType).then((item) => {
-                if (item) {
-                  const fieldValues = getFieldValue(fieldPath);
-                  fieldValues.push(item.id);
-                  setFieldValue(fieldPath, fieldValues);
-                  this.updateData(true, item);
-                }
-              });
+              if (artist && (groupField === 'role' ? role : staff)) {
+                fetch('https://nd-test.symbio.now.sh/api/createItem', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                  },
+                  body: JSON.stringify({
+                    itemType: remoteItemsType,
+                    production: itemId,
+                    [groupField]: groupField === 'role' ? role.value : staff.value,
+                    artist: artist.value,
+                    dateFrom: from,
+                    dateTo: to,
+                    cmsId: null,
+                  }),
+                })
+                  .then(result => result.json())
+                  .then((item) => {
+                    const fieldValues = getFieldValue(fieldPath);
+                    fieldValues.push(item.id);
+                    setFieldValue(fieldPath, fieldValues);
+                    this.updateData(true, item);
+                  });
+              }
             }}
           >
             <svg viewBox="0 0 448 512" width="1em" height="1em">
@@ -447,12 +440,110 @@ export default class Main extends Component {
             </svg>
             <span>Přidat</span>
           </button>
+          {(!artist || (groupField === 'role' && !role) || (groupField === 'staff' && !staff))
+          && <span style={{ color: 'red', fontSize: 12 }}>Pro přidání obsazení zvolte roli a umělce a klikněte na tlačítko Přidat</span>}
+        </div>
+        <div className="form">
+          <Select
+            options={data.titles.map(title => ({
+              label: title.title,
+              options: title[fieldName].map(titleItem => ({
+                value: titleItem.id,
+                label: fieldName === 'roles' ? titleItem.name : titleItem.field.title,
+              })),
+            }))}
+            placeholder={fieldName === 'roles' ? 'Vyberte roli...' : 'Vyberte funkci...'}
+            styles={{
+              control: (_, { selectProps: { width } }) => ({
+                width,
+                display: 'flex',
+                borderTop: 'solid 1px',
+                borderRight: 'solid 1px',
+                borderBottom: 'solid 1px',
+                padding: '3px',
+              }),
+              menu: (provided, state) => ({
+                ...provided,
+                width: state.selectProps.width,
+              }),
+            }}
+            onChange={(val) => {
+              if (fieldName === 'roles') {
+                this.setState({
+                  role: val,
+                });
+              } else {
+                this.setState({
+                  staff: val,
+                });
+              }
+            }}
+            width={180}
+          />
+          <AsyncSelect
+            cacheOptions
+            loadOptions={inputValue => fetch('https://graphql.datocms.com/preview', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                query: `{
+                  allArtists(filter: {displayTitle: {matches: { pattern: "${inputValue}", caseSensitive: false}}}) {
+                    value: id
+                    label: displayTitle
+                  }
+                }`,
+              }),
+            })
+              .then(res => res.json()).then(res => res.data.allArtists)}
+            defaultOptions
+            placeholder="Vyberte umělce..."
+            onChange={(val) => {
+              this.setState({
+                artist: val,
+              });
+            }}
+            styles={{
+              control: (_, { selectProps: { width } }) => ({
+                width,
+                display: 'flex',
+                borderTop: 'solid 1px',
+                borderRight: 'solid 1px',
+                borderBottom: 'solid 1px',
+                padding: '3px',
+              }),
+              menu: (provided, state) => ({
+                ...provided,
+                width: state.selectProps.width,
+              }),
+            }}
+            width={180}
+          />
+          <input
+            type="date"
+            onChange={(e) => {
+              this.setState({
+                from: e.target.value,
+              });
+            }}
+          />
+          <input
+            type="date"
+            onChange={(e) => {
+              this.setState({
+                to: e.target.value,
+              });
+            }}
+          />
         </div>
         <ul>
           {data.titles.map(title => (
             <li key={`title_${title.id}`}>
               <h2>
-Titul:
+                Titul:
                 {title.title}
               </h2>
               <ul>

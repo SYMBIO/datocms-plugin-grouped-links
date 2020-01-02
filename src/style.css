@@ -75,3 +75,8 @@ ul li ul li ul li:hover {
 .move-to-front{
   z-index: 100;
 }
+
+.form {
+  display: flex;
+  flex-direction: row;
+}
