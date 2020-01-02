@@ -158,7 +158,7 @@ export default class Main extends Component {
             ${allItemsQuery}(filter: {id: {eq: "${item.id}"}}) {
               id
               artist {
-                first_name
+                firstName
                 name
               }
             }
@@ -176,7 +176,7 @@ export default class Main extends Component {
             ${allItemsQuery}(filter: {id: {eq: "${item.id}"}}) {
               id
               artist {
-                first_name
+                firstName
                 name
               }
             }
