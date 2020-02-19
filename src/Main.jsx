@@ -423,6 +423,7 @@ export default class Main extends Component {
                     dateFrom: from,
                     dateTo: to,
                     cmsId: null,
+                    highlighted: false,
                   }),
                 })
                   .then(result => result.json())
