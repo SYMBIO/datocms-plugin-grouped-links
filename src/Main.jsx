@@ -409,6 +409,7 @@ export default class Main extends Component {
             className="DatoCMS-button"
             onClick={() => {
               if (artist && (groupField === 'role' ? role : staff)) {
+                const roleAddition = groupField === 'role' ? { highlighted: false } : {};
                 fetch('https://nd-test.symbio.now.sh/api/createItem', {
                   method: 'POST',
                   headers: {
@@ -423,7 +424,7 @@ export default class Main extends Component {
                     dateFrom: from,
                     dateTo: to,
                     cmsId: null,
-                    highlighted: false,
+                    ...roleAddition,
                   }),
                 })
                   .then(result => result.json())
