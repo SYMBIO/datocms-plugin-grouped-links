@@ -393,7 +393,7 @@ export default class Main extends Component {
       setFieldValue,
       token,
       groupField,
-      itemId,
+      // itemId,
       remoteItemsType,
     } = this.props;
 
@@ -418,7 +418,7 @@ export default class Main extends Component {
                   },
                   body: JSON.stringify({
                     itemType: remoteItemsType,
-                    production: itemId,
+                    // production: itemId,
                     [groupField]: groupField === 'role' ? role.value : staff.value,
                     artist: artist.value,
                     dateFrom: from,
