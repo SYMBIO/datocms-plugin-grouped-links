@@ -418,7 +418,7 @@ export default class Main extends Component {
                   },
                   body: JSON.stringify({
                     itemType: remoteItemsType,
-                    // production: itemId,
+                    production: null,
                     [groupField]: groupField === 'role' ? role.value : staff.value,
                     artist: artist.value,
                     dateFrom: from,
