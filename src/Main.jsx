@@ -114,6 +114,7 @@ export default class Main extends Component {
                 }
                 dateFrom
                 dateTo
+                ${groupField === 'role' ? 'highlighted' : ''}
               }
             }
           }`,
@@ -169,6 +170,7 @@ export default class Main extends Component {
             },
             dateFrom: item.dateFrom,
             dateTo: item.dateTo,
+            highlighted: false,
           };
 
           const originalData = data;
@@ -334,6 +336,7 @@ export default class Main extends Component {
         <li className="draggable" key={`item_${item.id}`} id={`item_${index}`}>
           <i className="icon--hamburger" />
           {' '}
+          {item.highlighted ? '!!! ' : ''}
           {item.artist.firstName}
           {' '}
           {item.artist.name}
