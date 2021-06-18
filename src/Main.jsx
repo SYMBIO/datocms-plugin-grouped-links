@@ -93,31 +93,31 @@ export default class Main extends Component {
         },
         body: JSON.stringify({
           query: `{
-            ${itemType}(filter: {id: {eq: "${itemId}"}}) {
-              titles {
-                id
-                title
-                ${fieldName} {
-                  id
-                  ${queryPart}
-                }
-              }
-              ${fieldName} {
-                id
-                ${groupField} {
-                  id
-                }
-                artist {
-                  id
-                  firstName
-                  name
-                }
-                dateFrom
-                dateTo
-                ${groupField === 'role' ? 'highlighted' : ''}
-              }
-            }
-          }`,
+  ${itemType}(filter: {id: {eq: "${itemId}"}}) {
+    titles {
+      id
+      title
+      ${fieldName} {
+        id
+        ${queryPart}
+      }
+    }
+    ${fieldName} {
+      id
+      ${groupField} {
+        id
+      }
+      artist {
+        id
+        firstName
+        name
+      }
+      dateFrom
+      dateTo
+      ${groupField === 'role' ? 'highlighted' : ''}
+    }
+  }
+}`,
         }),
       })
         .then(res => res.json())
@@ -145,15 +145,14 @@ export default class Main extends Component {
         },
         body: JSON.stringify({
           query: `{
-            ${allItemsQuery}(filter: {id: {eq: "${item.id}"}}) {
-              id
-              artist {
-                firstName
-                name
-              }
-            }
-          }
-          `,
+  ${allItemsQuery}(filter: {id: {eq: "${item.id}"}}) {
+    id
+    artist {
+      firstName
+      name
+    }
+  }
+}`,
         }),
       })
         .then(res => res.json())
