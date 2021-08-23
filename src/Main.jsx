@@ -343,7 +343,7 @@ export default class Main extends Component {
           {' '}
           <button
             type="button"
-            className="DatoCMS-button DatoCMS-button--micro"
+            className="DatoCMS-button DatoCMS-button--micro DatoCMS-button--white"
             onClick={() => {
               editItem(item.id).then((item2) => {
                 if (item2) {
@@ -356,7 +356,7 @@ export default class Main extends Component {
           </button>
           <button
             type="button"
-            className="DatoCMS-button DatoCMS-button--micro"
+            className="DatoCMS-button DatoCMS-button--micro DatoCMS-button--white"
             onClick={() => {
               const currentFieldValue = getFieldValue(fieldPath);
               currentFieldValue.splice(
