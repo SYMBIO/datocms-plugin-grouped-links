@@ -203,6 +203,8 @@ class Main extends Component {
         const dropzoneArrayIndex = Number(event.target.id.split('_')[1]);
         const draggableArrayIndex = Number(event.relatedTarget.id.split('_')[1]);
 
+        debugger;
+
         currentFieldValue.splice(dropzoneArrayIndex, 0, [currentFieldValue[draggableArrayIndex]]);
         currentFieldValue.splice(
           draggableArrayIndex > dropzoneArrayIndex ? draggableArrayIndex + 1 : draggableArrayIndex,
