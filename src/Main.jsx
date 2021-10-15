@@ -260,7 +260,7 @@ class Main extends Component {
         }
         return false;
       })
-      .filter((a) => a);
+      .filter(Boolean);
 
     if (rows.length === 0) {
       return <></>;
