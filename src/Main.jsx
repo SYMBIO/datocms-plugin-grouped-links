@@ -195,6 +195,7 @@ class Main extends Component {
         data[fieldName].splice(draggableArrayIndex, 1, removedLi[0]);
 
         event.relatedTarget.classList.toggle('can-drop');
+        console.log('setting field value', fieldPath, currentFieldValue);
         setFieldValue(fieldPath, currentFieldValue);
       },
       ondropdeactivate(event) {
