@@ -289,8 +289,7 @@ class Main extends Component {
         <li className="draggable" key={`item_${item.id}`} id={`item_${index}`}>
           <i className="icon--hamburger" />
           {item.highlighted ? '!!! ' : ''}
-          {item.artist.firstName}
-          {item.artist.name}
+          {item.artist.firstName} {item.artist.name}
           {renderDates()}{' '}
           <button
             type="button"
