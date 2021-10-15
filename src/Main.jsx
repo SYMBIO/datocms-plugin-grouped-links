@@ -99,6 +99,7 @@ class Main extends Component {
       })
         .then((res) => res.json())
         .then((res) => {
+          console.log(res);
           this.setState({
             loading: false,
             data: res.data[itemType],
@@ -195,7 +196,6 @@ class Main extends Component {
         data[fieldName].splice(draggableArrayIndex, 1, removedLi[0]);
 
         event.relatedTarget.classList.toggle('can-drop');
-        console.log('setting field value', fieldPath, currentFieldValue);
         setFieldValue(fieldPath, currentFieldValue);
       },
       ondropdeactivate(event) {
