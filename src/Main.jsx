@@ -17,7 +17,7 @@ function getObjectDeepProperty(obj, path) {
   return val;
 }
 
-@connectToDatoCms(plugin => ({
+@connectToDatoCms((plugin) => ({
   developmentMode: plugin.parameters.global.developmentMode,
   token: plugin.parameters.global.datoCmsApiToken,
   groupField: plugin.parameters.instance.groupField,
@@ -30,53 +30,30 @@ function getObjectDeepProperty(obj, path) {
   editItem: plugin.editItem,
   fieldName: plugin.field.attributes.api_key,
   fieldPath: plugin.fieldPath,
-  remoteItemsType:
-    plugin.field.attributes.validators.items_item_type.item_types[0],
+  remoteItemsType: plugin.field.attributes.validators.items_item_type.item_types[0],
   setFieldValue: plugin.setFieldValue,
   getFieldValue: plugin.getFieldValue,
 }))
-export default class Main extends Component {
-  static propTypes = {
-    groupField: PropTypes.string,
-    allItemsQuery: PropTypes.string,
-    queryPart: PropTypes.string,
-    attrName: PropTypes.string,
-    itemId: PropTypes.string,
-    itemType: PropTypes.string,
-    token: PropTypes.string,
-    // createNewItem: PropTypes.func,
-    editItem: PropTypes.func,
-    fieldName: PropTypes.string,
-    fieldPath: PropTypes.string,
-    remoteItemsType: PropTypes.string,
-    setFieldValue: PropTypes.func,
-    getFieldValue: PropTypes.func,
-  };
-
-  state = {
-    loading: true,
-    data: {},
-    role: null,
-    staff: null,
-    artist: null,
-    from: null,
-    to: null,
-  };
+class Main extends Component {
+  constructor() {
+    super();
+    this.state = {
+      loading: true,
+      data: {},
+      role: null,
+      staff: null,
+      artist: null,
+      from: null,
+      to: null,
+    };
+  }
 
   componentDidMount() {
     this.updateData();
   }
 
   updateData(cache, item) {
-    const {
-      token,
-      itemId,
-      itemType,
-      fieldName,
-      groupField,
-      allItemsQuery,
-      queryPart,
-    } = this.props;
+    const { token, itemId, itemType, fieldName, groupField, allItemsQuery, queryPart } = this.props;
     const { data } = this.state;
 
     this.setState({
@@ -120,14 +97,14 @@ export default class Main extends Component {
 }`,
         }),
       })
-        .then(res => res.json())
+        .then((res) => res.json())
         .then((res) => {
           this.setState({
             loading: false,
             data: res.data[itemType],
           });
 
-          this.initilizeDragHandler();
+          this.initializeDragHandler();
         })
         .catch((error) => {
           this.setState({
@@ -155,7 +132,7 @@ export default class Main extends Component {
 }`,
         }),
       })
-        .then(res => res.json())
+        .then((res) => res.json())
         .then((res) => {
           const { artist } = res.data[allItemsQuery][0];
           const newRecord = {
@@ -186,14 +163,12 @@ export default class Main extends Component {
     }
   }
 
-  initilizeDragHandler() {
+  initializeDragHandler() {
     const position = {
       x: 0,
       y: 0,
     };
-    const {
-      getFieldValue, setFieldValue, fieldPath, fieldName,
-    } = this.props;
+    const { getFieldValue, setFieldValue, fieldPath, fieldName } = this.props;
     const { data } = this.state;
 
     interact('.dropzone').dropzone({
@@ -211,22 +186,12 @@ export default class Main extends Component {
       ondrop(event) {
         const currentFieldValue = getFieldValue(fieldPath);
         const dropzoneArrayIndex = Number(event.target.id.split('_')[1]);
-        const draggableArrayIndex = Number(
-          event.relatedTarget.id.split('_')[1],
-        );
+        const draggableArrayIndex = Number(event.relatedTarget.id.split('_')[1]);
 
-        const removedValue = currentFieldValue.splice(
-          dropzoneArrayIndex,
-          1,
-          currentFieldValue[draggableArrayIndex],
-        );
+        const removedValue = currentFieldValue.splice(dropzoneArrayIndex, 1, currentFieldValue[draggableArrayIndex]);
         currentFieldValue.splice(draggableArrayIndex, 1, removedValue[0]);
 
-        const removedLi = data[fieldName].splice(
-          dropzoneArrayIndex,
-          1,
-          data[fieldName][draggableArrayIndex],
-        );
+        const removedLi = data[fieldName].splice(dropzoneArrayIndex, 1, data[fieldName][draggableArrayIndex]);
         data[fieldName].splice(draggableArrayIndex, 1, removedLi[0]);
 
         event.relatedTarget.classList.toggle('can-drop');
@@ -272,7 +237,7 @@ export default class Main extends Component {
         }
         return false;
       })
-      .filter(a => a);
+      .filter((a) => a);
 
     if (rows.length === 0) {
       return <></>;
@@ -287,17 +252,10 @@ export default class Main extends Component {
   }
 
   renderRow(item) {
-    const {
-      editItem,
-      fieldPath,
-      fieldName,
-      getFieldValue,
-      setFieldValue,
-      token,
-    } = this.props;
+    const { editItem, fieldPath, fieldName, getFieldValue, setFieldValue, token } = this.props;
     const { data } = this.state;
 
-    const index = data[fieldName].map(e => e.id).indexOf(item.id);
+    const index = data[fieldName].map((e) => e.id).indexOf(item.id);
 
     function renderDates() {
       if (!item.dateFrom && !item.dateTo) {
@@ -327,20 +285,13 @@ export default class Main extends Component {
 
     return (
       <div key={`Row_${item.id}`}>
-        <div
-          className="dropzone"
-          key={`dropzone_${index}`}
-          id={`dropzone_${index}`}
-        />
+        <div className="dropzone" key={`dropzone_${index}`} id={`dropzone_${index}`} />
         <li className="draggable" key={`item_${item.id}`} id={`item_${index}`}>
           <i className="icon--hamburger" />
-          {' '}
           {item.highlighted ? '!!! ' : ''}
           {item.artist.firstName}
-          {' '}
           {item.artist.name}
-          {renderDates()}
-          {' '}
+          {renderDates()}{' '}
           <button
             type="button"
             className="DatoCMS-button DatoCMS-button--micro DatoCMS-button--white"
@@ -359,14 +310,9 @@ export default class Main extends Component {
             className="DatoCMS-button DatoCMS-button--micro DatoCMS-button--white"
             onClick={() => {
               const currentFieldValue = getFieldValue(fieldPath);
-              currentFieldValue.splice(
-                getFieldValue(fieldPath).indexOf(item.id),
-                1,
-              );
+              currentFieldValue.splice(getFieldValue(fieldPath).indexOf(item.id), 1);
 
-              const indexInData = data[fieldName]
-                .map(e => e.id)
-                .indexOf(item.id);
+              const indexInData = data[fieldName].map((e) => e.id).indexOf(item.id);
               data[fieldName].splice(indexInData, 1);
 
               setFieldValue(fieldPath, currentFieldValue);
@@ -385,9 +331,7 @@ export default class Main extends Component {
   }
 
   render() {
-    const {
-      data, loading, role, staff, artist, from, to,
-    } = this.state;
+    const { data, loading, role, staff, artist, from, to } = this.state;
     const {
       fieldPath,
       fieldName,
@@ -429,7 +373,7 @@ export default class Main extends Component {
                     ...roleAddition,
                   }),
                 })
-                  .then(result => result.json())
+                  .then((result) => result.json())
                   .then((item) => {
                     const fieldValues = getFieldValue(fieldPath);
                     fieldValues.push(item.id);
@@ -440,18 +384,22 @@ export default class Main extends Component {
             }}
           >
             <svg viewBox="0 0 448 512" width="1em" height="1em">
+              {/* eslint-disable-next-line max-len */}
               <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
             </svg>
             <span>Přidat</span>
           </button>
-          {(!artist || (groupField === 'role' && !role) || (groupField === 'staff' && !staff))
-          && <span style={{ color: 'red', fontSize: 12 }}>Pro přidání obsazení zvolte roli a umělce a klikněte na tlačítko Přidat</span>}
+          {(!artist || (groupField === 'role' && !role) || (groupField === 'staff' && !staff)) && (
+            <span style={{ color: 'red', fontSize: 12 }}>
+              Pro přidání obsazení zvolte roli a umělce a klikněte na tlačítko Přidat
+            </span>
+          )}
         </div>
         <div className="form">
           <Select
-            options={data.titles.map(title => ({
+            options={data.titles.map((title) => ({
               label: title.title,
-              options: title[fieldName].map(titleItem => ({
+              options: title[fieldName].map((titleItem) => ({
                 value: titleItem.id,
                 label: fieldName === 'roles' ? titleItem.name : titleItem.field.title,
               })),
@@ -486,23 +434,26 @@ export default class Main extends Component {
           />
           <AsyncSelect
             cacheOptions
-            loadOptions={inputValue => fetch('https://graphql.datocms.com/preview', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify({
-                query: `{
+            loadOptions={(inputValue) =>
+              fetch('https://graphql.datocms.com/preview', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Accept: 'application/json',
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                  query: `{
                   allArtists(filter: {displayTitle: {matches: { pattern: "${inputValue}", caseSensitive: false}}}) {
                     value: id
                     label: displayTitle
                   }
                 }`,
-              }),
-            })
-              .then(res => res.json()).then(res => res.data.allArtists)}
+                }),
+              })
+                .then((res) => res.json())
+                .then((res) => res.data.allArtists)
+            }
             defaultOptions
             placeholder="Vyberte umělce..."
             onChange={(val) => {
@@ -544,15 +495,13 @@ export default class Main extends Component {
           />
         </div>
         <ul>
-          {data.titles.map(title => (
+          {data.titles.map((title) => (
             <li key={`title_${title.id}`}>
               <h2>
                 Titul:
                 {title.title}
               </h2>
-              <ul>
-                {title[fieldName].map(item => this.renderBlock(title, data[fieldName], item))}
-              </ul>
+              <ul>{title[fieldName].map((item) => this.renderBlock(title, data[fieldName], item))}</ul>
             </li>
           ))}
         </ul>
@@ -560,3 +509,22 @@ export default class Main extends Component {
     );
   }
 }
+
+Main.propTypes = {
+  groupField: PropTypes.string,
+  allItemsQuery: PropTypes.string,
+  queryPart: PropTypes.string,
+  attrName: PropTypes.string,
+  itemId: PropTypes.string,
+  itemType: PropTypes.string,
+  token: PropTypes.string,
+  // createNewItem: PropTypes.func,
+  editItem: PropTypes.func,
+  fieldName: PropTypes.string,
+  fieldPath: PropTypes.string,
+  remoteItemsType: PropTypes.string,
+  setFieldValue: PropTypes.func,
+  getFieldValue: PropTypes.func,
+};
+
+export default Main;

@@ -1,21 +1,28 @@
 {
-  parser: "babel-eslint",
-  extends: "airbnb",
-  env: {
-    es6: true,
-    mocha: true,
-    browser: true
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "env": {
+    "es6": true,
+    "mocha": true,
+    "browser": true
   },
-  parserOptions: {
-    sourceType: "module"
+  "parserOptions": {
+    "sourceType": "module"
   },
-  settings: {
+  "settings": {
     "import/resolver": "webpack"
   },
-  rules: {
-    "class-methods-use-this": 0,
-    "react/forbid-prop-types": 0,
-    "no-console": 0,
-    "react/require-default-props": 0,
+  "rules": {
+    "max-len": [1, 120],
+    "class-methods-use-this": "off",
+    "react/forbid-prop-types": "off",
+    "no-console": "off",
+    "react/require-default-props": "off",
+    "object-curly-newline": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "operator-linebreak": "off",
+    "implicit-arrow-linebreak": "off",
+    "react/jsx-curly-newline": "off",
+    "react/jsx-props-no-spreading": "off"
   }
 }

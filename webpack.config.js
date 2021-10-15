@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
+const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -12,18 +13,12 @@ module.exports = {
   },
   devtool: 'source-map',
   devServer: {
-    contentBase: './',
-    disableHostCheck: true,
-    public: 'https://datocms-plugin-grouped-links.tunnel.datahub.at',
+    static: './',
+    allowedHosts: 'all',
+    hot: true,
   },
   module: {
     rules: [
-      {
-        test: /\.jsx?$/,
-        include: `${__dirname}/src`,
-        loader: 'eslint-loader',
-        enforce: 'pre',
-      },
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
@@ -31,10 +26,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader',
-        ],
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.svg/,
@@ -49,17 +41,17 @@ module.exports = {
     extensions: ['.js', '.jsx'],
   },
   plugins: [
+    new ESLintPlugin({
+      extensions: ['js', 'jsx'],
+      fix: false,
+    }),
     new HtmlWebpackPlugin({
       title: 'DatoCMS plugin',
       minify: isProduction,
     }),
-    new HtmlWebpackIncludeAssetsPlugin({
+    new HtmlWebpackTagsPlugin({
+      tags: ['https://unpkg.com/datocms-plugins-sdk/dist/sdk.js', 'https://unpkg.com/datocms-plugins-sdk/dist/sdk.css'],
       append: false,
-      publicPath: '',
-      assets: [
-        'https://unpkg.com/datocms-plugins-sdk/dist/sdk.js',
-        'https://unpkg.com/datocms-plugins-sdk/dist/sdk.css',
-      ],
     }),
   ].filter(Boolean),
 };
