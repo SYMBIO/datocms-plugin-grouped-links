@@ -53,7 +53,18 @@ class Main extends Component {
   }
 
   updateData(cache, item) {
-    const { token, itemId, itemType, fieldName, groupField, allItemsQuery, queryPart } = this.props;
+    const {
+      token,
+      itemId,
+      itemType,
+      fieldName,
+      fieldPath,
+      getFieldValue,
+      groupField,
+      allItemsQuery,
+      queryPart,
+      setFieldValue,
+    } = this.props;
     const { data } = this.state;
 
     this.setState({
@@ -99,7 +110,11 @@ class Main extends Component {
       })
         .then((res) => res.json())
         .then((res) => {
-          console.log(res);
+          const validValues = res.data[itemType][fieldName].map((v) => v.id);
+          const value = getFieldValue(fieldPath);
+          const newValue = value.filter((v) => validValues.indexOf(v) !== -1);
+          console.log(value);
+          console.log(newValue);
           this.setState({
             loading: false,
             data: res.data[itemType],
