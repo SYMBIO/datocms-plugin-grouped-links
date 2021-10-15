@@ -63,7 +63,7 @@ class Main extends Component {
       groupField,
       allItemsQuery,
       queryPart,
-      // setFieldValue,
+      setFieldValue,
     } = this.props;
     const { data } = this.state;
 
@@ -113,8 +113,7 @@ class Main extends Component {
           const validValues = res.data[itemType][fieldName].map((v) => v.id);
           const value = getFieldValue(fieldPath);
           const newValue = value.filter((v) => validValues.indexOf(v) !== -1);
-          console.log(value);
-          console.log(newValue);
+          setFieldValue(newValue);
           this.setState({
             loading: false,
             data: res.data[itemType],
