@@ -203,21 +203,16 @@ class Main extends Component {
         const dropzoneArrayIndex = Number(event.target.id.split('_')[1]);
         const draggableArrayIndex = Number(event.relatedTarget.id.split('_')[1]);
 
-        // eslint-disable-next-line no-debugger
-        debugger;
-
-        currentFieldValue.splice(dropzoneArrayIndex, 0, [currentFieldValue[draggableArrayIndex]]);
+        currentFieldValue.splice(dropzoneArrayIndex, 0, currentFieldValue[draggableArrayIndex]);
         currentFieldValue.splice(
           draggableArrayIndex > dropzoneArrayIndex ? draggableArrayIndex + 1 : draggableArrayIndex,
           1,
-          [],
         );
 
-        data[fieldName].splice(dropzoneArrayIndex, 0, [data[fieldName][draggableArrayIndex]]);
+        data[fieldName].splice(dropzoneArrayIndex, 0, data[fieldName][draggableArrayIndex]);
         data[fieldName].splice(
           draggableArrayIndex > dropzoneArrayIndex ? draggableArrayIndex + 1 : draggableArrayIndex,
           1,
-          [],
         );
 
         console.log(currentFieldValue);
