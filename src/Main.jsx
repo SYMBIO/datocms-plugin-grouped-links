@@ -113,7 +113,7 @@ class Main extends Component {
           const validValues = res.data[itemType][fieldName].map((v) => v.id);
           const value = getFieldValue(fieldPath);
           const newValue = value.filter((v) => validValues.indexOf(v) !== -1);
-          setFieldValue(newValue);
+          setFieldValue(fieldPath, newValue);
           this.setState({
             loading: false,
             data: res.data[itemType],
