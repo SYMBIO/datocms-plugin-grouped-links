@@ -63,7 +63,7 @@ class Main extends Component {
       groupField,
       allItemsQuery,
       queryPart,
-      setFieldValue,
+      // setFieldValue,
     } = this.props;
     const { data } = this.state;
 
