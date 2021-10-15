@@ -203,11 +203,11 @@ class Main extends Component {
         const dropzoneArrayIndex = Number(event.target.id.split('_')[1]);
         const draggableArrayIndex = Number(event.relatedTarget.id.split('_')[1]);
 
-        const removedValue = currentFieldValue.splice(dropzoneArrayIndex, 1, currentFieldValue[draggableArrayIndex]);
-        currentFieldValue.splice(draggableArrayIndex, 1, removedValue[0]);
+        currentFieldValue.splice(dropzoneArrayIndex, 0, currentFieldValue[draggableArrayIndex]);
+        currentFieldValue.splice(draggableArrayIndex, 1, []);
 
-        const removedLi = data[fieldName].splice(dropzoneArrayIndex, 1, data[fieldName][draggableArrayIndex]);
-        data[fieldName].splice(draggableArrayIndex, 1, removedLi[0]);
+        data[fieldName].splice(dropzoneArrayIndex, 0, data[fieldName][draggableArrayIndex]);
+        data[fieldName].splice(draggableArrayIndex, 1, []);
 
         event.relatedTarget.classList.toggle('can-drop');
         setFieldValue(fieldPath, currentFieldValue);
