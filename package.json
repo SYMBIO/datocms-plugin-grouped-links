@@ -11,8 +11,8 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "NODE_ENV=development webpack-dev-server --port 5000",
-    "build": "NODE_ENV=production webpack --progress",
-    "dist": "NODE_ENV=production webpack --progress",
+    "build": "NODE_ENV=production webpack",
+    "dist": "NODE_ENV=production webpack",
     "prepublishOnly": "rimraf lib dist && mkdir dist && npm run dist",
     "addToProject": "yo datocms-plugin:add-to-project",
     "test": "echo 1"
