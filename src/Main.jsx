@@ -217,6 +217,8 @@ class Main extends Component {
           [],
         );
 
+        console.log(currentFieldValue);
+
         event.relatedTarget.classList.toggle('can-drop');
         setFieldValue(fieldPath, currentFieldValue);
       },
