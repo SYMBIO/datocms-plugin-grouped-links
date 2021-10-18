@@ -50,7 +50,10 @@ module.exports = {
       minify: isProduction,
     }),
     new HtmlWebpackTagsPlugin({
-      tags: ['https://unpkg.com/datocms-plugins-sdk/dist/sdk.js', 'https://unpkg.com/datocms-plugins-sdk/dist/sdk.css'],
+      tags: [
+        'https://unpkg.com/datocms-plugins-sdk@0.1.2/dist/sdk.js',
+        'https://unpkg.com/datocms-plugins-sdk@0.1.2/dist/sdk.css',
+      ],
       append: false,
     }),
   ].filter(Boolean),
