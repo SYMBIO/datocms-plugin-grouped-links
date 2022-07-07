@@ -17,10 +17,10 @@ function getObjectDeepProperty(obj, path) {
   return val;
 }
 
-@connectToDatoCms(plugin => ({
+@connectToDatoCms((plugin) => ({
   developmentMode: plugin.parameters.global.developmentMode,
   token: plugin.parameters.global.datoCmsApiToken,
-  groupField: plugin.parameters.instance.groupField,""
+  groupField: plugin.parameters.instance.groupField,
   allItemsQuery: plugin.parameters.instance.allItemsQuery,
   queryPart: plugin.parameters.instance.queryPart,
   attrName: plugin.parameters.instance.attrName,
@@ -108,11 +108,11 @@ class Main extends Component {
 }`,
         }),
       })
-        .then(res => res.json())
+        .then((res) => res.json())
         .then((res) => {
-          const validValues = res.data[itemType][fieldName].map(v => v.id);
+          const validValues = res.data[itemType][fieldName].map((v) => v.id);
           const value = getFieldValue(fieldPath);
-          const newValue = value.filter(v => validValues.indexOf(v) !== -1);
+          const newValue = value.filter((v) => validValues.indexOf(v) !== -1);
           setFieldValue(fieldPath, newValue);
           this.setState({
             loading: false,
@@ -147,7 +147,7 @@ class Main extends Component {
 }`,
         }),
       })
-        .then(res => res.json())
+        .then((res) => res.json())
         .then((res) => {
           const { artist } = res.data[allItemsQuery][0];
           const newRecord = {
@@ -278,7 +278,7 @@ class Main extends Component {
     const { editItem, fieldPath, fieldName, getFieldValue, setFieldValue, token } = this.props;
     const { data } = this.state;
 
-    const index = data[fieldName].map(e => e.id).indexOf(item.id);
+    const index = data[fieldName].map((e) => e.id).indexOf(item.id);
 
     function renderDates() {
       if (!item.dateFrom && !item.dateTo) {
@@ -334,7 +334,7 @@ class Main extends Component {
               const currentFieldValue = getFieldValue(fieldPath);
               currentFieldValue.splice(getFieldValue(fieldPath).indexOf(item.id), 1);
 
-              const indexInData = data[fieldName].map(e => e.id).indexOf(item.id);
+              const indexInData = data[fieldName].map((e) => e.id).indexOf(item.id);
               data[fieldName].splice(indexInData, 1);
 
               setFieldValue(fieldPath, currentFieldValue);
@@ -395,7 +395,7 @@ class Main extends Component {
                     ...roleAddition,
                   }),
                 })
-                  .then(result => result.json())
+                  .then((result) => result.json())
                   .then((item) => {
                     const fieldValues = getFieldValue(fieldPath);
                     fieldValues.push(item.id);
@@ -419,9 +419,9 @@ class Main extends Component {
         </div>
         <div className="form">
           <Select
-            options={data.titles.map(title => ({
+            options={data.titles.map((title) => ({
               label: title.title,
-              options: title[fieldName].map(titleItem => ({
+              options: title[fieldName].map((titleItem) => ({
                 value: titleItem.id,
                 label: fieldName === 'roles' ? titleItem.name : titleItem.field.title,
               })),
@@ -456,7 +456,7 @@ class Main extends Component {
           />
           <AsyncSelect
             cacheOptions
-            loadOptions={inputValue =>
+            loadOptions={(inputValue) =>
               fetch('https://graphql.datocms.com/preview', {
                 method: 'POST',
                 headers: {
@@ -473,8 +473,8 @@ class Main extends Component {
                 }`,
                 }),
               })
-                .then(res => res.json())
-                .then(res => res.data.allArtists)
+                .then((res) => res.json())
+                .then((res) => res.data.allArtists)
             }
             defaultOptions
             placeholder="Vyberte umělce..."
@@ -517,13 +517,13 @@ class Main extends Component {
           />
         </div>
         <ul>
-          {data.titles.map(title => (
+          {data.titles.map((title) => (
             <li key={`title_${title.id}`}>
               <h2>
                 Titul:
                 {title.title}
               </h2>
-              <ul>{title[fieldName].map(item => this.renderBlock(title, data[fieldName], item))}</ul>
+              <ul>{title[fieldName].map((item) => this.renderBlock(title, data[fieldName], item))}</ul>
             </li>
           ))}
         </ul>
