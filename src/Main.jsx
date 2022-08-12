@@ -319,8 +319,13 @@ class Main extends Component {
             className="DatoCMS-button DatoCMS-button--micro DatoCMS-button--white"
             onClick={() => {
               editItem(item.id).then((item2) => {
+                const datoClient = new SiteClient(token);
                 if (item2) {
-                  this.updateData();
+                  datoClient.items.publish(item.id).then((item3) => {
+                    if (item3) {
+                      this.updateData();
+                    }
+                  });
                 }
               });
             }}
@@ -354,16 +359,8 @@ class Main extends Component {
 
   render() {
     const { data, loading, role, staff, artist, from, to } = this.state;
-    const {
-      fieldPath,
-      fieldName,
-      getFieldValue,
-      setFieldValue,
-      token,
-      groupField,
-      itemId,
-      remoteItemsType,
-    } = this.props;
+    const { fieldPath, fieldName, getFieldValue, setFieldValue, token, groupField, itemId, remoteItemsType } =
+      this.props;
 
     if (loading) {
       return <div className="container">Načítám data...</div>;
