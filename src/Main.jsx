@@ -33,6 +33,7 @@ function getObjectDeepProperty(obj, path) {
   remoteItemsType: plugin.field.attributes.validators.items_item_type.item_types[0],
   setFieldValue: plugin.setFieldValue,
   getFieldValue: plugin.getFieldValue,
+  itemStatus: plugin.itemStatus,
 }))
 class Main extends Component {
   constructor() {
@@ -66,6 +67,7 @@ class Main extends Component {
       setFieldValue,
     } = this.props;
     const { data } = this.state;
+    console.log(`itemType: ${itemType}`);
 
     this.setState({
       loading: true,
@@ -275,7 +277,7 @@ class Main extends Component {
   }
 
   renderRow(item) {
-    const { editItem, fieldPath, fieldName, getFieldValue, setFieldValue, token } = this.props;
+    const { editItem, fieldPath, fieldName, getFieldValue, setFieldValue, token, itemStatus } = this.props;
     const { data } = this.state;
 
     const index = data[fieldName].map((e) => e.id).indexOf(item.id);
@@ -319,8 +321,17 @@ class Main extends Component {
             className="DatoCMS-button DatoCMS-button--micro DatoCMS-button--white"
             onClick={() => {
               editItem(item.id).then((item2) => {
+                const datoClient = new SiteClient(token);
                 if (item2) {
-                  this.updateData();
+                  if (itemStatus === 'published') {
+                    datoClient.items.publish(item.id).then((item3) => {
+                      if (item3) {
+                        this.updateData();
+                      }
+                    });
+                  } else {
+                    this.updateData();
+                  }
                 }
               });
             }}
@@ -354,16 +365,8 @@ class Main extends Component {
 
   render() {
     const { data, loading, role, staff, artist, from, to } = this.state;
-    const {
-      fieldPath,
-      fieldName,
-      getFieldValue,
-      setFieldValue,
-      token,
-      groupField,
-      itemId,
-      remoteItemsType,
-    } = this.props;
+    const { fieldPath, fieldName, getFieldValue, setFieldValue, token, groupField, itemId, remoteItemsType } =
+      this.props;
 
     if (loading) {
       return <div className="container">Načítám data...</div>;
@@ -547,6 +550,7 @@ Main.propTypes = {
   remoteItemsType: PropTypes.string,
   setFieldValue: PropTypes.func,
   getFieldValue: PropTypes.func,
+  itemStatus: PropTypes.string,
 };
 
 export default Main;
