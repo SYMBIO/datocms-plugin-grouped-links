@@ -34,6 +34,7 @@ function getObjectDeepProperty(obj, path) {
   setFieldValue: plugin.setFieldValue,
   getFieldValue: plugin.getFieldValue,
   itemStatus: plugin.itemStatus,
+  saveCurrentItem: plugin.saveCurrentItem,
 }))
 class Main extends Component {
   constructor() {
@@ -277,7 +278,8 @@ class Main extends Component {
   }
 
   renderRow(item) {
-    const { editItem, fieldPath, fieldName, getFieldValue, setFieldValue, token, itemStatus } = this.props;
+    const { editItem, fieldPath, fieldName, getFieldValue, setFieldValue, token, itemStatus, saveCurrentItem } =
+      this.props;
     const { data } = this.state;
 
     const index = data[fieldName].map((e) => e.id).indexOf(item.id);
@@ -321,6 +323,7 @@ class Main extends Component {
             className="DatoCMS-button DatoCMS-button--micro DatoCMS-button--white"
             onClick={() => {
               editItem(item.id).then((item2) => {
+                saveCurrentItem();
                 const datoClient = new SiteClient(token);
                 if (item2) {
                   if (itemStatus === 'published') {
@@ -365,8 +368,17 @@ class Main extends Component {
 
   render() {
     const { data, loading, role, staff, artist, from, to } = this.state;
-    const { fieldPath, fieldName, getFieldValue, setFieldValue, token, groupField, itemId, remoteItemsType } =
-      this.props;
+    const {
+      fieldPath,
+      fieldName,
+      getFieldValue,
+      setFieldValue,
+      token,
+      groupField,
+      itemId,
+      remoteItemsType,
+      itemStatus,
+    } = this.props;
 
     if (loading) {
       return <div className="container">Načítám data...</div>;
@@ -395,6 +407,7 @@ class Main extends Component {
                     dateFrom: from,
                     dateTo: to,
                     cmsId: null,
+                    status: itemStatus,
                     ...roleAddition,
                   }),
                 })
@@ -551,6 +564,7 @@ Main.propTypes = {
   setFieldValue: PropTypes.func,
   getFieldValue: PropTypes.func,
   itemStatus: PropTypes.string,
+  saveCurrentItem: PropTypes.func,
 };
 
 export default Main;
