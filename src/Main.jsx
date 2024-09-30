@@ -203,7 +203,6 @@ class Main extends Component {
       },
       ondrop(event) {
         const currentFieldValue = getFieldValue(fieldPath);
-        console.log(currentFieldValue, event.target, event.relatedTarget);
         const dropzoneArrayIndex = Number(event.target.id.split('_')[1]);
         const draggableArrayIndex = Number(event.relatedTarget.id.split('_')[1]);
 
@@ -311,7 +310,6 @@ class Main extends Component {
       return result.join('');
     }
 
-    console.log('ITEM', item);
     return (
       <div key={`Row_${item.id}`}>
         <div className="dropzone" key={`dropzone_${index}`} id={`dropzone_${index}`} />
