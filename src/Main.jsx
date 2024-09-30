@@ -311,6 +311,7 @@ class Main extends Component {
       return result.join('');
     }
 
+    console.log('ITEM', item);
     return (
       <div key={`Row_${item.id}`}>
         <div className="dropzone" key={`dropzone_${index}`} id={`dropzone_${index}`} />
